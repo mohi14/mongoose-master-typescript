@@ -95,6 +95,17 @@ db.practice.find({age:{$type: "string"}}) it will give the documents where the a
 
 db.practice.find({skills:{$size:0}}) where all the skills field value is empty
 db.practice.find({skills:{$size:1}}) where  skills field size is 1, its for array
+
+$all, $elemMatch,
+
+db.practice.find({interests:"Travelling"}).project({interests:1})  aita diye  array er moddhe specific property thakle documents dibe
+
+db.practice.find({"interests.0":"Travelling"}).project({interests:1}) jaigola te first index Travelling seigola dibe
+
+db.practice.find({interests:{$all:[ "Travelling", "Gaming", "Reading" ]}}).project({interests:1})
+
+db.practice.find({skills:{$elemMatch: {name: "JAVA",level: "Intermidiate"}}}).project({skills:1})
+
 */
 
 
