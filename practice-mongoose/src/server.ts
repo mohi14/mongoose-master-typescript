@@ -118,6 +118,33 @@ db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$addToSet: {in
 
 db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$push: {interests: {$each: ["Cooking","Writting"]}}}) aita korle array abar same value diye modify kora jai
 
+
+$unset, $pop, $pull, $pullAll
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$unset: {education: "" }}) /{education:1} aita diye kono document theke kono field k uraiya deya jai/moche deya jai
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$pop: {languages:1}}) array er moddhe theke last dik theke akta element nai hoye jabe
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$pop: {languages:-1}}) array er moddhe theke first dik theke akta element nai hoye jabe
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$pull: {friends:"Abdur Rakib"}}) specific kawke array theke nai kore deya
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$pullAll: {friends:["Mir Hussain", "Najmus Sakib"]}}) array theke specific multiple data k ber kore deya
+
+
+db.createCollection('test') it will crate new collection name as test
+db.test.drop() it will delete whole collection named test
+
+$inc, $min, 
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$inc:{age:5}}) it will add a new value with new value
+
+db.practice.updateMany({},{$rename:{"favoutitColor":"favourteColor"}})  it will rename key name of a document
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$min:{minAge:18}})
+
+
+
+
 */
 
 
