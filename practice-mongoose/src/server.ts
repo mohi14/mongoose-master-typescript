@@ -106,6 +106,18 @@ db.practice.find({interests:{$all:[ "Travelling", "Gaming", "Reading" ]}}).proje
 
 db.practice.find({skills:{$elemMatch: {name: "JAVA",level: "Intermidiate"}}}).project({skills:1})
 
+
+$set, $addToSet, $push
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$set: {country: "bangladesh"}}) for update primitive type value
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$addToSet: {interests: "Reading"}}) aita korte akber modifie hoya value same value diye r modify kore nah. array er moddhe data add kore
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$addToSet: {interests: {$each: ["Cooking","Writting"]}}}) add/set multiple data in array
+
+
+db.practice.updateOne({_id:ObjectId("6406ad63fc13ae5a40000067")},{$push: {interests: {$each: ["Cooking","Writting"]}}}) aita korle array abar same value diye modify kora jai
+
 */
 
 
