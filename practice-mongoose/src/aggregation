@@ -1,0 +1,159 @@
+*What is aggregation?
+-> Aggregation is a way of processing a large number of documents in a collection by means of passing them through different stages. The stages make up what is known as a pipeline. The stages in a pipeline can filter, sort, group, reshape and modify documents that pass through the pipeline.
+
+*Syntax
+->db.collection.aggregate(
+    [
+        -stage 1
+        {},--> pipeline
+        -stage 2
+        {},-->pipeline
+        -stage 3
+        {}-->pipeline
+    ]
+)
+
+*Example
+->db.cousins.aggregate([
+ //Filter out cousins who have an Exam
+ { $match:{ hasExam: {$ne: true} } },
+
+ //Filter out cousins who have a budget less than or equal to 500
+ { $match: { budget: { $gt: 500} } },
+
+ //Filter out cousins who are sick
+ { $match { isSick: { $ne: true} } },
+
+ //Calculate the total budget of the remaining cousins
+ { $group: { _id: null, total_budget: { $sum: "$budget"} } },
+
+ //Sort the remaining cousins by age in descending order 
+ { $sort: { age: -1} },
+
+ //Limit the output to the top 2 cousins
+ { $limit: 2},
+])
+
+*$match aggregate operator, eta "find" er moto kaj kore
+
+db.practice.aggregate([
+    // stage Match
+    {$match: { gender : "Male", age: 21}}
+    ])
+
+    db.practice.aggregate([
+    // stage Match
+    {$match: { gender : "Male", age: {$gt:21}}},
+    {$project: {gender:1, age: 1}}
+    ])
+
+*$addFields stage , eta new field add kore database e
+
+db.practice.aggregate([
+    // add field stage
+    {$addFields: {salary: 0}},
+    ]) -- it will not add field permanently
+
+    db.practice.aggregate([
+    // add field stage
+    {$addFields: {
+        salary: {$toInt: {
+        $floor: {
+            $multiply: [{$rand:{}},100 ]
+        }
+    }}}},
+    ]) -- it will not add field permanently
+
+db.practice.aggregate([
+    // add field stage
+    {$addFields: {
+        salary: {$toInt: {
+        $floor: {
+            $multiply: [{$rand:{}},100 ]
+        }
+    }}}},
+    {$out: "salarywithpractice"}
+    ]) --it will create new collection with permanent salary field
+
+    db.practice.aggregate([
+    // add field stage
+    {$addFields: {
+        salary: {$toInt: {
+        $floor: {
+            $multiply: [{$rand:{}},100 ]
+        }
+    }}}},
+    {$merge: "practice"}
+    ]) --it will add new filed in the existing collection
+
+
+    *$group, eta unique vabe document gola combain kore
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: { _id: "$gender"}
+    }
+    ])
+    
+    // reference ---> 
+    // use case 1. operator $push $sum 2. Reference to a field
+
+db.practice.aggregate([
+    // group stage
+    {_id: {
+        gender:"$gender"
+        }
+        }}
+    ])
+
+
+    db.practice.aggregate([
+    // group stage
+    {
+        $group: { _id: {
+            gender:"$gender",
+            age: "$age"
+        }}
+    }
+    ])
+    
+    
+*more $match, accumulate, $sort, $limit
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: { _id: {
+            gender:"$gender",
+            count: {$sum:1}
+    }
+        }
+    }
+    ])
+
+    db.practice.aggregate([
+    // group stage
+    {
+        $group: { _id: {
+            gender:"$gender",
+            count: {$sum:1}
+    }
+        }
+    },
+    
+    // project stage
+    {$project: {
+        _id:0,
+        salary: "$_id",
+        persons:1
+    }},
+    
+    // sort stage
+    {
+        $sort:{_id:1}
+    }
+    ])
+
+
+
