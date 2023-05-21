@@ -119,26 +119,25 @@ db.practice.aggregate([
     ])
     
     
-*more $match, accumulate, $sort, $limit
+*more $group, accumulate, $sort, $limit
 
 db.practice.aggregate([
     // group stage
     {
-        $group: { _id: {
-            gender:"$gender",
-            count: {$sum:1}
-    }
+        $group: {
+            _id:  "$gender",count: { $sum: 1 } --> ata gender er bittota er bitte te group korbe and $sum diye count korbe aki rokom koto gola ase
         }
     }
-    ])
+])
 
     db.practice.aggregate([
     // group stage
     {
         $group: { _id: {
             gender:"$gender",
-            count: {$sum:1}
-    }
+            
+    },
+    persons: {$sum:1} --> accumulator, it will count how many same person it found
         }
     },
     
@@ -146,7 +145,7 @@ db.practice.aggregate([
     {$project: {
         _id:0,
         salary: "$_id",
-        persons:1
+        // persons:1
     }},
     
     // sort stage
@@ -154,6 +153,86 @@ db.practice.aggregate([
         $sort:{_id:1}
     }
     ])
+
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: { _id:null,count: { $sum: "$salary"}} --> it will sum all the salary field value
+    },
+    
+    ])
+
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: {
+            _id: null,
+            count: { $sum: "$salary" },
+            maxSalary: { $max: "$salary" },
+            minSalary: {$min: "$salary"},
+            avgSalary: {$avg: "$salary"}
+        }
+    }
+])
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: {
+            _id: null,
+            count: { $sum: "$salary" },
+            maxSalary: { $max: "$salary" },
+            minSalary: {$min: "$salary"},
+            avgSalary: {$avg: "$salary"}
+        }
+    },
+    {
+        $project: {
+            count:1,
+            maxSalary: 1,
+            minSalary:1,
+            avgSalary:1,
+            salaryRange: {$subtract: ["$maxSalary","$minSalary"]}
+        }
+       
+    }
+])
+
+
+
+db.practice.aggregate([
+    // group stage
+    {
+        $group: {
+            _id: "$age",
+            persons: {$sum: 1},
+            count: { $sum: "$salary" },
+            maxSalary: { $max: "$salary" }
+        }
+    }
+])
+
+
+* $unwind, --> ata akta document er array theke array er element gola diye alada noton document toiri kore, joto gola array element thakbe toto gola document banabe
+
+db.practice.aggregate([
+    // unwind stage
+    {
+        $unwind: "$education" ---> array theke akta akta kore noton document toiri koreche
+    },
+])
+
+db.practice.aggregate([
+    // unwind stage
+    {
+        $unwind: "$education"
+    },
+    {
+        $group: { _id: "$education"} -->unwind korar por group education er vitti te documents gola group kora hoyeche
+    }
+])
 
 
 
