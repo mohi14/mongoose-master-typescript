@@ -230,9 +230,62 @@ db.practice.aggregate([
         $unwind: "$education"
     },
     {
-        $group: { _id: "$education"} -->unwind korar por group education er vitti te documents gola group kora hoyeche
+        $group: { _id: "$education"} -->unwind korar por group education er vitti te documents gola group kora hoyeche unique vabe.
     }
 ])
 
+
+$project diye document k amra reshape korte pari or modify korete pari, like name change etc
+
+*$facet, aita diye subpipeline banai
+
+db.practice.aggregate([
+    {$match: {_id:ObjectId("6406ad65fc13ae5a400000c5")}},
+    
+    {//multistage pipeline
+
+        $facet: {
+            //  sub pipeline 
+            "friendsCount": [
+                // stage
+                { $project: { friendsCount: { $size: "$friends" } } }
+            ],
+            // sub pipeline
+            "interestsCount": [
+                { $project: { interestsCount: { $size: "$interests" } } }
+            ],
+            // sub pipeline
+            skillsCount: [
+                { $project: { skillsCount: { $size: "$skills" } } }
+            ]
+        }
+
+    }
+])
+
+
+*$lookup, its compare and modification between two collection
+
+db.practice.aggregate([
+    {$match: {email:"dhourstan2p@examiner.com"}},
+    {$lookup: {
+           from: "<collection to join>",
+           localField: "<field from the input documents>",
+           foreignField: "<field from the documents of the from collection>",
+           as: "<output array field>"
+         }}
+])
+
+db.practice.aggregate([
+    {$match: {email:"dhourstan2p@examiner.com"}},
+    {$lookup: {
+           from: "additionalInfo",
+           localField: "email",
+           foreignField: "userEmail",
+           as: "additionalInformation"
+         }}
+])
+
+db.additionalInfo.updateOne({_id:ObjectId("646a19e18626685778331e6b")},{$set:{userId: new ObjectId("6406ad65fc13ae5a400000c5")}})
 
 
